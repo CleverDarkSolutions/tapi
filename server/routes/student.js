@@ -1,19 +1,21 @@
 import express from "express";
 import fs from "fs";
+import * as protoLoader from "@grpc/proto-loader";
+import * as grpc from "@grpc/grpc-js";
 
+
+const packageDefinition = protoLoader.loadSync('C:\\Users\\48534\\WebstormProjects\\untitled4\\frontend\\vite-project\\grpc\\proto\\schedule.proto')
+const scheduleProto = grpc.loadPackageDefinition(packageDefinition)
+const client = new scheduleProto.ScheduleService('127.0.0.1:9090', grpc.ChannelCredentials.createInsecure())
 export const studentRouter = express.Router()
 
+
 studentRouter.get('/:id/plan/:startDate/:endDate', (req,res) => {
-    let rawdata = fs.readFileSync('C:\\Users\\48534\\WebstormProjects\\TAPI\\tapi\\src\\assets\\MOCK_DATA.json');
-    let data = JSON.parse(rawdata);
-
-    const startDate = req.params.startDate;
-    const endDate = req.params.endDate;
-
-    const mappedSubjects = data.filter( (item) => item.id == req.params.id).map((item) => `Lekcja: ${item.lekcja}, Sala ${item.Sala} o godz ${item.Godzina} <br>`)
-
-
-    res.send(`Plan da studenta ${req.params.id} od ${startDate} do ${endDate} <br> ${mappedSubjects}`)
+    client.GetStudent({studentId: '1'}, (err, response) => {
+        if(err !== null)
+            console.log(err)
+        res.send(response)
+    })
 })
 
 studentRouter.get('/:id', (req,res) => {

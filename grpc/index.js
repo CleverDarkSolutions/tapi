@@ -1,6 +1,6 @@
 import * as grpc from '@grpc/grpc-js'
 import * as protoLoader from '@grpc/proto-loader'
-const packageDefinition = protoLoader.loadSync('grpc/proto/schedule.proto')
+const packageDefinition = protoLoader.loadSync('proto/schedule.proto')
 const scheduleProto = grpc.loadPackageDefinition(packageDefinition)
 
 const server = new grpc.Server();
